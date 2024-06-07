@@ -2,10 +2,11 @@ import styles from "./nav.module.scss";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useNewTaskModal } from "../dialogs/task/newTaskProvider";
+import PlusIcon from "../../assets/icons/plus";
 
 const NavDashboard = () => {
   const location = useLocation();
-  const path = "/"+location.pathname.split("/")[1];
+  const path = "/" + location.pathname.split("/")[1];
   const navigate = useNavigate();
   const { openModal } = useNewTaskModal();
   const navRoutes: {
@@ -43,9 +44,7 @@ const NavDashboard = () => {
               <button key={i} onClick={() => changePage(route.route)}>
                 <div
                   className={`${
-                    path !== route.route
-                      ? styles.inactive
-                      : styles.active
+                    path !== route.route ? styles.inactive : styles.active
                   } ${styles.navItem}`}
                 >
                   {route.icon}
@@ -66,21 +65,7 @@ const NavDashboard = () => {
           </div>
           <div>
             <button onClick={handleOpen} className="button-default">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 18 18"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M9.13464 1.5V16.5M16.6346 9H1.63464"
-                  stroke="white"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+              <PlusIcon />
               Assign homework
             </button>
           </div>
@@ -89,5 +74,4 @@ const NavDashboard = () => {
     </>
   );
 };
-//TODO: EXPORT ICONS
 export default NavDashboard;

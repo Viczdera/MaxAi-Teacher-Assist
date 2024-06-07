@@ -19,7 +19,7 @@ const StudentTable = ({ data }: { data: any[] }) => {
   return (
     <div>
       <div className="tbl-header">
-        <table cellpadding="0" cellspacing="0" border="0">
+        <table cellPadding="0" cellSpacing="0">
           <thead>
             <tr>
               <th>Name</th>
@@ -31,7 +31,7 @@ const StudentTable = ({ data }: { data: any[] }) => {
         </table>
       </div>
       <div className="tbl-content">
-        <table cellpadding="0" cellspacing="0" border="0">
+        <table cellPadding="0" cellSpacing="0">
           <tbody>
             {data?.map((student, index) => (
               <tr onClick={()=>viewStudent(student)} key={index}>

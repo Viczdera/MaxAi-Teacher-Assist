@@ -1,61 +1,87 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import textStyles from "../../components/texts.module.scss";
 import styles from "./student.module.scss";
+import Back from "../../components/navigation/back";
+import { useParams } from "react-router-dom";
+import Divider from "../../components/inputs/divider";
 import { useNewTaskModal } from "../../components/dialogs/task/newTaskProvider";
+import Avatar from "../../components/dataDisplay/avatar";
 
-const fetchStudents = async () => {
+export interface StudentData {
+  id?: string;
+  grade?: string;
+  firstname?: string;
+  lastname?: string;
+  email?: string;
+  schoolId?: string;
+  avatar?: string;
+}
+const fetchStudentById = async (id: string) => {
   const response = await axios
     .get("http://localhost:3000/students")
     .then(({ data }) => {
-      return data;
+      if (data?.students) {
+        const student = data?.students.find(
+          (student: any) => student?.id === id
+        );
+        return student;
+      } else return {};
     })
     .catch((err) => {
-      console.log("errror fetching students", err);
+      console.log("errror fetching student", err);
     });
   return response;
 };
-//TODO: ADD ERROR MESSAGE AND TOAST
-const Student = () => {
-  const [students, setStudents] = useState<any[]>([]);
-  const { openModal} = useNewTaskModal();
-  useEffect(() => {
-    fetchStudents().then((data) => {
-      setStudents(data?.students || []);
-    });
-  }, []);
 
+const Student = () => {
+  const [student, setStudent] = useState<StudentData>({});
+  const { studentId } = useParams();
+  const { openModal } = useNewTaskModal();
+  useEffect(() => {
+    if (studentId)
+      fetchStudentById(studentId).then((data) => {
+        setStudent(data || []);
+      });
+  }, []);
+  const studentItems: { title: string; value: string }[] = useMemo(
+    () => [
+      { title: "firstname", value: student?.firstname || "" },
+      { title: "lastname", value: student?.lastname || "" },
+      { title: "grade", value: student?.grade || "" },
+      { title: "email", value: student?.email || "" },
+    ],
+    [student]
+  );
+  //TODO:ADD LOADING STATES FOR EVERYTING
   return (
     <div className="parent">
-      <div className={`child ${styles.classroom}`}>
-        <p className={textStyles.sectionTitle}>Your Classroom</p>
+      <div className={`child ${styles.student}`}>
+        <Back />
+        <p className={textStyles.sectionTitle}>Student Profile</p>
         <div className={`card-cont ${styles.overview}`}>
-          <div  className={styles.newTaskCard}>
-            {/* <div sx={campaignStyles.speakerRounded}>
-              <SpeakerIcon />
-            </div> */}
-            <p>
-              Congratulations John,
-            </p>
-            <p color="white">
-              You can start creating your needs now
-            </p>
-            <button onClick={openModal} className="button-default">Assign homework</button>
+          <div className={styles.avatarName}>
+            <Avatar />
+            <div className={styles.name}>
+              <p className={textStyles.cardMd}>{`${student?.firstname} ${student?.lastname}`}</p>
+              <p>{student?.schoolId}</p>
+              <div>
+                <button className="button-default" onClick={openModal}>
+                  Assign book
+                </button>
+              </div>
+            </div>
           </div>
-          <div  className={styles.newTaskCard}>
-            {/* <div sx={campaignStyles.speakerRounded}>
-              <SpeakerIcon />
-            </div> */}
-            <p>
-              Congratulations John,
-            </p>
-            <p color="white">
-              You can start creating your needs now
-            </p>
-            <button className="button-default">Assign homework</button>
+          <Divider mt="var(--p-md)" mb="var(--p-md)" />
+          <div className={styles.statsCont}>
+            {studentItems.map((item, i) => (
+              <div key={i}>
+                <p>{item.title}</p>
+                <p className={textStyles.cardMd}>{item.value}</p>
+              </div>
+            ))}
           </div>
         </div>
-       
       </div>
     </div>
   );

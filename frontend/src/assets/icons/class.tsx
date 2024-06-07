@@ -12,8 +12,8 @@ const ClassIcon = () => {
       <path
         d="M12 18V12.5M14.5 18V12.5M9.5 18V12.5M6 10L12 6L18 10M17 18V10.888C15.3459 10.629 13.6742 10.4993 12 10.5C10.2993 10.5 8.62933 10.6333 7 10.888V18M6 18H18M12 8.5H12.0053V8.50533H12V8.5Z"
         stroke="#6D7280"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

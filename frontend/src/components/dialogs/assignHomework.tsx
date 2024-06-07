@@ -1,9 +1,14 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import Dialog from "./dialog";
 import axios from "axios";
-import "./inputs.scss";
+import { SyncLoader } from "react-spinners";
+
+import textStyles from "../texts.module.scss";
+import "./form.scss";
+
+import Divider from "../inputs/divider";
 
 const fetchResources = async () => {
   const response = await axios
@@ -17,9 +22,9 @@ const fetchResources = async () => {
   return response;
 };
 
-const assignHomework = async (data:any) => {
+const assignHomework = async (data: any) => {
   const response = await axios
-    .post("http://localhost:3000/assignment",data)
+    .post("http://localhost:3000/assignment", data)
     .then(({ data }) => {
       return data;
     })
@@ -37,13 +42,23 @@ const AssignHomework = ({
   onClose: () => void;
 }) => {
   const [resources, setResources] = useState<any[]>([]);
-  const [submitting,setSubmitting]=useState(false)
+  const [loadingResources, setLoadingResources] = useState(false);
+
+  const [submitting, setSubmitting] = useState(false);
+
   useEffect(() => {
+    setLoadingResources(true);
     fetchResources().then((data) => {
       setResources(data?.resources || []);
+      setLoadingResources(false);
     });
   }, []);
-  const initialValues = {
+  const initialValues: {
+    name: string;
+    date: string;
+    resources: any[];
+    students: any[];
+  } = {
     name: "",
     date: "",
     resources: [],
@@ -70,98 +85,128 @@ const AssignHomework = ({
 
   const formik = useFormik({
     initialValues,
+    enableReinitialize: true,
     validationSchema: handleValidation,
     onSubmit: (values) => {
       console.log(values);
-      setSubmitting(true)
-      assignHomework(values).then((data)=>{
-        console.log(data)
-        setSubmitting(false)
-      })
+      // setSubmitting(true);
+      // assignHomework(values).then((data) => {
+      //   console.log(data);
+      //   setSubmitting(false);
+      // });
     },
   });
   return (
     <Dialog isOpen={isOpen} onClose={onClose}>
-      <p>About you assessment</p>
-
-      <div
-        style={{
-          padding: "var(--p-md",
-          borderRadius: "6px",
-          boxShadow: "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
-        }}
-      >
-        <div
-          className="inputWrap"
-          style={{
-            borderRadius: "6px",
-            padding: "var(--p-sm) var(--p-sm-2)",
-            boxShadow: "rgba(0, 0, 0, 0.05) 0px 0px 0px 1px",
-          }}
-        >
-          <input placeholder="Enter assessment name" />
-        </div>
-      </div>
-      {/* {JSON.stringify(resources)} */}
-      <p>Add questions and answers</p>
       <form onSubmit={formik.handleSubmit}>
+        <p className={textStyles.sectionTitle}>About your assessment</p>
+        <Divider mb="var(--p-sm)" />
         <div className="form-group">
-          <label>Name</label>
-          <input
-            type="text"
-            name="name"
-            className={formik.touched.name && formik.errors.name ? "error" : ""}
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-          {formik.touched.name && formik.errors.name ? (
-            <div className="error-message">{formik.errors.name}</div>
-          ) : null}
+          <div className="cardCont">
+            <div className="inputWrap">
+              <input
+                type="text"
+                name="name"
+                className={
+                  formik.touched.name && formik.errors.name ? "error" : ""
+                }
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+            </div>
+            {formik.touched.name && formik.errors.name ? (
+              <div className="error-message">{formik.errors.name}</div>
+            ) : null}
+          </div>
         </div>
-        <div className="form-group">
-          <label>Date</label>
-          <input
-            type="date"
-            name="date"
-            className={formik.touched.date && formik.errors.date ? "error" : ""}
-            value={formik.values.date}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-          {formik.touched.date && formik.errors.date ? (
-            <div className="error-message">{formik.errors.date}</div>
-          ) : null}
-        </div>
-        <div className="form-group">
-          <label>Resources</label>
-          <select
-            name="resources"
-            className={
-              formik.touched.resources && formik.errors.resources ? "error" : ""
-            }
-            value={formik.values.resources || []} 
-            onChange={(e) => {
-              const value = Array.from(
-                e.target.selectedOptions,
-                (option) => option.value
-              );
-              console.log(value);
-              formik.setFieldValue("resources", value);
-            }}
-            onBlur={formik.handleBlur}
-            multiple={false}
-          >
-            {resources.map((resource, index) => (
-              <option key={index}>{resource?.path}</option>
-            ))}
-          </select>
-          {formik.touched.resources && formik.errors.resources ? (
-            <div className="error-message">{formik.errors.resources}</div>
-          ) : null}
-        </div>
+        <p className={textStyles.sectionTitle}>Add resources and data</p>
+        <Divider mb="var(--p-sm)" />
+        <div className="cardCont">
+          <div className="form-group">
+            <div className="form-label">
+              <label>Due Date</label>
+            </div>
+            <div className="inputWrap">
+              <input
+                type="date"
+                name="date"
+                className={
+                  formik.touched.date && formik.errors.date ? "error" : ""
+                }
+                value={formik.values.date}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+            </div>
+            {formik.touched.date && formik.errors.date ? (
+              <div className="error-message">{formik.errors.date}</div>
+            ) : null}
+          </div>
+          <div className="form-group">
+            <div className="form-label">
+              <label>Resources</label>
+            </div>
 
-        {/* <div className="form-group">
+            {!loadingResources ? (
+              <div>
+                <select
+                  name="resources"
+                  disabled={loadingResources}
+                  className={
+                    formik.touched.resources && formik.errors.resources
+                      ? "error"
+                      : ""
+                  }
+                  value={formik.values.resources}
+                  onChange={(e) => {
+                    const selectedValue: string = e.target.value;
+                    const selectedValues = Array.from(
+                      e.target.selectedOptions,
+                      (option) => option.value
+                    );
+
+                    const currentValue = [...formik.values.resources];
+                    if (selectedValues.length == 1) {
+                      let selectedIndex = currentValue.indexOf(
+                        selectedValues[0]
+                      );
+                      if (currentValue.includes(selectedValue)) {
+                        currentValue.splice(selectedIndex, 1);
+                        formik.setFieldValue(e.target.name, currentValue);
+                      } else {
+                        formik.setFieldValue(e.target.name, [
+                          ...currentValue,
+                          selectedValue,
+                        ]);
+                      }
+                    } else if (selectedValues.length > 1) {
+                      formik.setFieldValue(e.target.name, selectedValues);
+                    } else {
+                      formik.setFieldValue(e.target.name, []);
+                    }
+                  }}
+                  onBlur={formik.handleBlur}
+                  multiple
+                >
+                  {resources.map((resource, index) => (
+                    <option key={index} value={resource?.id}>
+                      {resource?.path}
+                    </option>
+                  ))}
+                </select>
+                {formik.touched.resources && formik.errors.resources ? (
+                  <div className="error-message">{formik.errors.resources}</div>
+                ) : null}
+              </div>
+            ) : (
+              <div className="flex-center-center inputWrap">
+                <SyncLoader size={10} color="var(--gray)" />
+              </div>
+            )}
+          </div>
+
+          {/* <div className="form-group">
           <label>students</label>
           <select
             name="students"
@@ -188,8 +233,14 @@ const AssignHomework = ({
             <div className="error-message">{formik.errors.students}</div>
           ) : null}
         </div> */}
-        
-        <button className="button-default" type="submit">Confirm</button>
+        </div>
+        <button
+          className="button-default"
+          style={{ marginTop: "var(--p-sm)" }}
+          type="submit"
+        >
+          Confirm
+        </button>
       </form>
     </Dialog>
   );

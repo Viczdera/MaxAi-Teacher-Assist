@@ -1,9 +1,7 @@
-// import { DashHamburgerIcon, WalletIcon, SpeakerIcon, WaveIcon } from "../icons";
-// import UserAvatar, { UserAvatarWithName } from "./avatar";
 import { useState } from "react";
 import styles from "./nav.module.scss";
 import { useLocation } from "react-router-dom";
-import { useNavigate, unstable_HistoryRouter } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AssignHomework from "../dialogs/assignHomework";
 
 const NavDashboard = () => {
@@ -20,21 +18,19 @@ const NavDashboard = () => {
     { name: "Resources", route: "/resourcess", icon: <div></div> },
   ];
 
-  const changePage = (route: string) => {
-    if (route === "/classroom") {
+  const changePage = (route: string) => navigate(route);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpen = () => {
+    if (location.pathname !== "/classroom") {
       navigate("/classroom?openModal=true");
       setTimeout(() => {
         navigate("/classroom?openModal=true&delay=true");
       }, 1000);
     } else {
-      navigate(route);
+      setIsOpen(true);
     }
-  };
-
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleOpen = () => {
-    setIsOpen(true);
   };
   const handleClose = () => {
     setIsOpen(false);

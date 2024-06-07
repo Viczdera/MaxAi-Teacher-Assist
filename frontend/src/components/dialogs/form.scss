@@ -1,0 +1,53 @@
+.form-group {
+  margin-bottom: var(--p-sm);
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: var(--p-xs);
+}
+
+input,
+select {
+  width: 100%;
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.inputWrap {
+  display: flex;
+  border-radius: 6px;
+  padding: var(--p-sm) var(--p-sm-2);
+
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+}
+.cardCont {
+  background-color: white;
+  padding: var(--p-md);
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+}
+select option {
+  padding: 4px;
+  border-radius: 4px;
+  margin: 2px 0px;
+}
+
+input.error,
+select.error {
+  border-color: red;
+}
+// .check-mark {
+//   margin-left: 5px;
+//   color: yellow;
+// }
+select[multiple] option:checked {
+  background-color: var(--yellow100);
+}
+.error-message {
+  color: red;
+  font-size:14px;
+  margin-top: 4px;
+}

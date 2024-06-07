@@ -1,0 +1,37 @@
+.navParent {
+  border-bottom: 1px solid #e2e4ea;
+  background-color: white;
+}
+.navCont {
+  display: flex;
+  width: 100%;
+  padding: var(--p-sm-2) 0px;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--p-md);
+  .navList {
+    display: flex;
+    padding: var(--p-xs-2);
+    gap: var(--p-xs);
+    background-color: var(--white300);
+    border-radius: 8px;
+    .navItem {
+      display: flex;
+      align-items: center;
+      gap: var(--p-xs);
+      padding: var(--p-xs-2) var(--p-md);
+      font-size: 14px;
+      border-radius: 8px;
+    }
+    .active {
+      color: black;
+      background-color: white;
+      background-color: var(--yellow100);
+    }
+    .inactive {
+      color: unset;
+      background-color: none;
+    }
+  }
+}
+

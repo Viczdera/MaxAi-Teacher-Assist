@@ -1,34 +1,72 @@
 .classroom {
-  p {
-    margin-top: var(--p-md);
-  }
   display: flex;
   width: 100%;
   flex-direction: column;
   gap: var(--p-md);
 }
-.overview{
-    display: flex;
+.overview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--p-sm);
 }
+.stats,
 .newTaskCard {
   width: 100%;
   display: flex;
   flex: 1;
-  flex-direction: column;
+
   align-items: center;
   justify-content: center;
+  border: 1px solid #e5e5e5;
+
+  border-radius: 8px;
+}
+.newTaskCard {
+  padding: var(--p-md);
+  border: 1px solid #e5e5e5;
+  background-color: var(--silver);
+  > div {
+    width: 100%;
+   // height: 100%;
+    display: flex;
+    padding: var(--p-md);
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    background-color: white;
+    gap: var(--p-sm);
+  }
+}
+.stats {
+  padding: var(--p-md) var(--p-lg-2);
+  flex-direction: column;
   gap: 12px;
   background: url("/static/images/backgrounds/campaignAdd.png");
   background-color: var(--bluePrimary);
   background-position: center;
   background-size: cover;
   background-color: no-repeat;
-  padding: var(--p-md) var(--p-lg-2);
-  border-radius: 8px;
-  //TODO:move this to textstyles
-  p{
-    color:white;
-    font-size:18px ;
+
+  .statItems{
+    gap:var(--p-sm);
+   
+    >div{
+      text-align: center;
+      padding: var(--p-xs) var(--p-md);
+      border-radius: 8px;
+      background-color: white;
+      box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgb(209, 213, 219) 0px 0px 0px 1px inset;
+    }
+  }
+  .itemValue{
+    text-transform: capitalize;
+    font-size: 14px;
     font-weight: 500;
+  }
+  .itemName{
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 300;
   }
 }

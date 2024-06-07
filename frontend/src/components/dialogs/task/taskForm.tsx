@@ -33,7 +33,6 @@ const assignHomework = async (data: any) => {
     });
   return response;
 };
-
 const TaskForm = ({
   isOpen,
   onClose,
@@ -73,7 +72,7 @@ const TaskForm = ({
       .min(new Date(), "Date cannot be in the past"),
     resources: yup
       .array()
-      .of(yup.string())
+      .of(yup.number())
       .min(1, "Add at least 1 resource")
       .required("Add at least 1 resource"),
     // students: yup
@@ -88,7 +87,12 @@ const TaskForm = ({
     enableReinitialize: true,
     validationSchema: handleValidation,
     onSubmit: (values) => {
-      console.log(values);
+      let formValues = { ...values };
+      const date = new Date(formValues.date);
+      // const dateTime = Math.floor(date.getTime() / 1000).toString();
+      const dateTime = date.getTime().toString();
+      formValues.date = dateTime;
+      console.log(formValues);
       // setSubmitting(true);
       // assignHomework(values).then((data) => {
       //   console.log(data);

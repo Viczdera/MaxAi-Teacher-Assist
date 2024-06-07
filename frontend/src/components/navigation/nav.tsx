@@ -22,10 +22,7 @@ const NavDashboard = () => {
 
   const handleOpen = () => {
     if (path !== "/classroom") {
-      navigate("/classroom?openModal=true");
-      setTimeout(() => {
-        navigate("/classroom?openModal=true&delay=true");
-      }, 1000);
+      navigate("/classroom");
     } else {
       openModal();
     }

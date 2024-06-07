@@ -1,34 +1,49 @@
-.classroom {
-  p {
-    margin-top: var(--p-md);
-  }
+.student {
   display: flex;
   width: 100%;
   flex-direction: column;
   gap: var(--p-md);
 }
-.overview{
-    display: flex;
-}
-.newTaskCard {
-  width: 100%;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  background: url("/static/images/backgrounds/campaignAdd.png");
-  background-color: var(--bluePrimary);
-  background-position: center;
-  background-size: cover;
-  background-color: no-repeat;
-  padding: var(--p-md) var(--p-lg-2);
-  border-radius: 8px;
-  //TODO:move this to textstyles
-  p{
-    color:white;
-    font-size:18px ;
-    font-weight: 500;
+.overview {
+  min-height: 80vh;
+  p {
+    text-transform: capitalize;
   }
+
+  .avatarName {
+    display: flex;
+    gap: var(--p-md);
+    .name {
+      display: flex;
+      flex-direction: column;
+      gap: var(--p-xs);
+    }
+  }
+}
+.statsCont {
+  border: 1px solid #e2e4ea;
+  border-radius: 8px;
+  padding: var(--p-md);
+  gap: var(--p-md);
+  display: flex;
+  flex-wrap: wrap;
+}
+
+//sm
+@media (min-width: 640px) {
+}
+//md
+@media (min-width: 768px) {
+}
+//lg
+@media (min-width: 1024px) {
+  .statsCont {
+    gap: 10%;
+  }
+}
+//xl
+@media (min-width: 1280px) {
+}
+//2xl
+@media (min-width: 1536px) {
 }

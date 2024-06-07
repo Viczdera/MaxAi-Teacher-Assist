@@ -1,15 +1,15 @@
-const PlusIcon = () => {
+const ArrowLeft = () => {
   return (
     <svg
-      width="18"
-      height="18"
-      viewBox="0 0 18 18"
+      width="10"
+      height="17"
+      viewBox="0 0 10 17"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        d="M9.13464 1.5V16.5M16.6346 9H1.63464"
-        stroke="white"
+        d="M8.75 16L1.25 8.5L8.75 1"
+        stroke="black"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -18,4 +18,4 @@ const PlusIcon = () => {
   );
 };
 
-export default PlusIcon;
+export default ArrowLeft;

@@ -9,6 +9,9 @@
   justify-content: space-between;
   align-items: center;
   gap: var(--p-md);
+  button{
+    display: none;
+  }
   .navList {
     display: flex;
     padding: var(--p-xs-2);
@@ -35,3 +38,36 @@
   }
 }
 
+.back{
+  display: flex;
+  align-items: center;
+  gap: var(--p-xs);
+  cursor: pointer;
+  margin: var(--p-sm) 0px;
+  width: max-content;
+
+}
+//sm
+@media (min-width: 640px) {
+  .navCont {
+    button{
+      display: flex;
+    }
+  }
+}
+//md
+@media (min-width: 768px) {
+ 
+}
+//lg
+@media (min-width: 1024px) {
+  
+}
+//xl
+@media (min-width: 1280px) {
+ 
+}
+//2xl
+@media (min-width: 1536px) {
+  
+}

@@ -1,13 +1,13 @@
-import { useState } from "react";
 import styles from "./nav.module.scss";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import AssignHomework from "../dialogs/assignHomework";
+import { useNewTaskModal } from "../dialogs/task/newTaskProvider";
 
 const NavDashboard = () => {
   const location = useLocation();
+  const path = "/"+location.pathname.split("/")[1];
   const navigate = useNavigate();
-
+  const { openModal } = useNewTaskModal();
   const navRoutes: {
     name: string;
     route: string;
@@ -15,26 +15,21 @@ const NavDashboard = () => {
   }[] = [
     { name: "Dashboard", route: "/", icon: <div></div> },
     { name: "Classroom", route: "/classroom", icon: <div></div> },
-    { name: "Resources", route: "/resourcess", icon: <div></div> },
   ];
 
   const changePage = (route: string) => navigate(route);
 
-  const [isOpen, setIsOpen] = useState(false);
-
   const handleOpen = () => {
-    if (location.pathname !== "/classroom") {
+    if (path !== "/classroom") {
       navigate("/classroom?openModal=true");
       setTimeout(() => {
         navigate("/classroom?openModal=true&delay=true");
       }, 1000);
     } else {
-      setIsOpen(true);
+      openModal();
     }
   };
-  const handleClose = () => {
-    setIsOpen(false);
-  };
+
   return (
     <>
       <div className={`parent ${styles.navParent}`}>
@@ -48,7 +43,7 @@ const NavDashboard = () => {
               <button key={i} onClick={() => changePage(route.route)}>
                 <div
                   className={`${
-                    location.pathname !== route.route
+                    path !== route.route
                       ? styles.inactive
                       : styles.active
                   } ${styles.navItem}`}
@@ -57,7 +52,7 @@ const NavDashboard = () => {
                   <span
                     style={{
                       color: `${
-                        location.pathname !== route.route
+                        path !== route.route
                           ? "var(--gray200)"
                           : "var(--bluePrimary)"
                       }`,
@@ -91,7 +86,6 @@ const NavDashboard = () => {
           </div>
         </div>
       </div>
-      <AssignHomework isOpen={isOpen} onClose={handleClose} />
     </>
   );
 };

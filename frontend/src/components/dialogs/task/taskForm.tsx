@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import Dialog from "./dialog";
+import Dialog from "../dialog";
 import axios from "axios";
 import { SyncLoader } from "react-spinners";
 
-import textStyles from "../texts.module.scss";
+import textStyles from "../../texts.module.scss";
 import "./form.scss";
 
-import Divider from "../inputs/divider";
+import Divider from "../../inputs/divider";
 
 const fetchResources = async () => {
   const response = await axios
@@ -34,7 +34,7 @@ const assignHomework = async (data: any) => {
   return response;
 };
 
-const AssignHomework = ({
+const TaskForm = ({
   isOpen,
   onClose,
 }: {
@@ -66,10 +66,10 @@ const AssignHomework = ({
   };
 
   const handleValidation = yup.object().shape({
-    name: yup.string().required("Please add an assignment name"),
+    name: yup.string().required("Kindly add an assignment name"),
     date: yup
       .date()
-      .required("Please add an assignment due date")
+      .required("Kindly add an assignment due date")
       .min(new Date(), "Date cannot be in the past"),
     resources: yup
       .array()
@@ -102,9 +102,10 @@ const AssignHomework = ({
         <p className={textStyles.sectionTitle}>About your assessment</p>
         <Divider mb="var(--p-sm)" />
         <div className="form-group">
-          <div className="cardCont">
+          <div className="card-cont">
             <div className="inputWrap">
               <input
+                placeholder="Enter assessment name"
                 type="text"
                 name="name"
                 className={
@@ -122,7 +123,7 @@ const AssignHomework = ({
         </div>
         <p className={textStyles.sectionTitle}>Add resources and data</p>
         <Divider mb="var(--p-sm)" />
-        <div className="cardCont">
+        <div className="card-cont">
           <div className="form-group">
             <div className="form-label">
               <label>Due Date</label>
@@ -246,4 +247,4 @@ const AssignHomework = ({
   );
 };
 
-export default AssignHomework;
+export default TaskForm;

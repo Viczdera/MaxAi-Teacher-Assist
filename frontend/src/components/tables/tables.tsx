@@ -1,91 +1,46 @@
 import React from "react";
+import "./tables.module.scss";
+import { useNavigate } from "react-router-dom";
 
-const Tables = () => {
+interface StudentData{
+  id?: string
+  grade?:string
+  firstname?:string
+  lastname?: string
+  email?:string
+  schoolId?:string
+  avatar?: string
+}
+const StudentTable = ({ data }: { data: any[] }) => {
+  const navigate=useNavigate()
+  const viewStudent=(data:StudentData)=>{
+    navigate(`/classroom/${data?.id}`);
+  }
   return (
     <div>
-      <h2>Responsive Table</h2>
-      <div className="table-wrapper">
-        <table className="fl-table">
+      <div className="tbl-header">
+        <table cellpadding="0" cellspacing="0" border="0">
           <thead>
             <tr>
-              <th>Header 1</th>
-              <th>Header 2</th>
-              <th>Header 3</th>
-              <th>Header 4</th>
-              <th>Header 5</th>
+              <th>Name</th>
+              <th>Id</th>
+              <th>Email</th>
+              <th>Grade</th>
             </tr>
           </thead>
+        </table>
+      </div>
+      <div className="tbl-content">
+        <table cellpadding="0" cellspacing="0" border="0">
           <tbody>
-            <tr>
-              <td>Content 1</td>
-              <td>Content 1</td>
-              <td>Content 1</td>
-              <td>Content 1</td>
-              <td>Content 1</td>
-            </tr>
-            <tr>
-              <td>Content 2</td>
-              <td>Content 2</td>
-              <td>Content 2</td>
-              <td>Content 2</td>
-              <td>Content 2</td>
-            </tr>
-            <tr>
-              <td>Content 3</td>
-              <td>Content 3</td>
-              <td>Content 3</td>
-              <td>Content 3</td>
-              <td>Content 3</td>
-            </tr>
-            <tr>
-              <td>Content 4</td>
-              <td>Content 4</td>
-              <td>Content 4</td>
-              <td>Content 4</td>
-              <td>Content 4</td>
-            </tr>
-            <tr>
-              <td>Content 5</td>
-              <td>Content 5</td>
-              <td>Content 5</td>
-              <td>Content 5</td>
-              <td>Content 5</td>
-            </tr>
-            <tr>
-              <td>Content 6</td>
-              <td>Content 6</td>
-              <td>Content 6</td>
-              <td>Content 6</td>
-              <td>Content 6</td>
-            </tr>
-            <tr>
-              <td>Content 7</td>
-              <td>Content 7</td>
-              <td>Content 7</td>
-              <td>Content 7</td>
-              <td>Content 7</td>
-            </tr>
-            <tr>
-              <td>Content 8</td>
-              <td>Content 8</td>
-              <td>Content 8</td>
-              <td>Content 8</td>
-              <td>Content 8</td>
-            </tr>
-            <tr>
-              <td>Content 9</td>
-              <td>Content 9</td>
-              <td>Content 9</td>
-              <td>Content 9</td>
-              <td>Content 9</td>
-            </tr>
-            <tr>
-              <td>Content 10</td>
-              <td>Content 10</td>
-              <td>Content 10</td>
-              <td>Content 10</td>
-              <td>Content 10</td>
-            </tr>
+            {data?.map((student, index) => (
+              <tr onClick={()=>viewStudent(student)} key={index}>
+                <td>{student?.firstname + student?.lastname}</td>
+                <td>{student?.id} </td>
+                <td>{student?.email}</td>
+                <td>{student?.grade}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -93,4 +48,4 @@ const Tables = () => {
   );
 };
 
-export default Tables;
+export default StudentTable;

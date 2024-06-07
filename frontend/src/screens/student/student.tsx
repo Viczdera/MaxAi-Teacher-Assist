@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import textStyles from "../../components/texts.module.scss";
-import styles from "./classroom.module.scss";
+import styles from "./student.module.scss";
 import { useNewTaskModal } from "../../components/dialogs/task/newTaskProvider";
-import StudentTable from "../../components/tables/tables";
+
 const fetchStudents = async () => {
   const response = await axios
     .get("http://localhost:3000/students")
@@ -16,7 +16,7 @@ const fetchStudents = async () => {
   return response;
 };
 //TODO: ADD ERROR MESSAGE AND TOAST
-const Classroom = () => {
+const Student = () => {
   const [students, setStudents] = useState<any[]>([]);
   const { openModal} = useNewTaskModal();
   useEffect(() => {
@@ -55,13 +55,10 @@ const Classroom = () => {
             <button className="button-default">Assign homework</button>
           </div>
         </div>
-        <div className="card-cont">
-          <p className={textStyles.sectionTitle}>All Students</p>
-          <StudentTable data={students}/>
-        </div>
+       
       </div>
     </div>
   );
 };
 
-export default Classroom;
+export default Student;

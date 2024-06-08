@@ -1,25 +1,17 @@
-import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import textStyles from "../../components/texts.module.scss";
 import styles from "./classroom.module.scss";
-import { useNewTaskModal } from "../../components/dialogs/task/newTaskProvider";
+import { useNewTaskModal } from "../../provider/contexts/newTaskContext";
 import StudentTable from "../../components/tables/tables";
 import ClassIcon from "../../assets/icons/class";
-const fetchStudents = async () => {
-  const response = await axios
-    .get("http://localhost:3000/students")
-    .then(({ data }) => {
-      return data;
-    })
-    .catch((err) => {
-      console.log("errror fetching students", err);
-    });
-  return response;
-};
-//TODO: ADD ERROR MESSAGE AND TOAST
+import { useTeacherContext } from "../../provider/contexts/teacherContext";
+import { fetchStudents } from "../../requests/fetchStudents";
+
 const Classroom = () => {
   const [students, setStudents] = useState<any[]>([]);
   const { openModal } = useNewTaskModal();
+  const { state, dispatch } = useTeacherContext();
+
   useEffect(() => {
     fetchStudents().then((data) => {
       setStudents(data?.students || []);
@@ -28,10 +20,13 @@ const Classroom = () => {
 
   const overviewStats: { name: string; value: string }[] = useMemo(
     () => [
-      { name: `Student${students.length>0?"s":""}`, value: students?.length.toString() || "0" },
-      { name: "Recent Task", value: "task name" },
+      {
+        name: `Student${students.length > 0 ? "s" : ""}`,
+        value: students?.length.toString() || "0",
+      },
+      { name: "Recent Task", value: state.recentAssignments.name },
     ],
-    [students]
+    [students, state]
   );
 
   return (
@@ -57,7 +52,10 @@ const Classroom = () => {
             <div>
               <p>Assign homework to your students</p>
               <div>
-                <button onClick={openModal} className="button-default">
+                <button
+                  onClick={() => openModal("all")}
+                  className="button-default"
+                >
                   Assign homework
                 </button>
               </div>

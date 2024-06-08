@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import textStyles from "../../components/texts.module.scss";
 import styles from "./dashboard.module.scss";
-import { useNewTaskModal } from "../../components/dialogs/task/newTaskProvider";
+import { useNewTaskModal } from "../../provider/contexts/newTaskContext";
 import StudentTable from "../../components/tables/tables";
 import ClassIcon from "../../assets/icons/class";
 const fetchStudents = async () => {

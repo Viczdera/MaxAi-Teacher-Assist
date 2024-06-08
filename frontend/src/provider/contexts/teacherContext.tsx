@@ -58,8 +58,8 @@ const reducer = (state: TeacherState, action: TeacherAction): TeacherState => {
       } else {
         newAssignedBooks.push(newPayload);
       }
-      console.log("old", state.assignedBooks);
-      console.log("updated", newAssignedBooks);
+      // console.log("old", state.assignedBooks);
+      // console.log("updated", newAssignedBooks);
       return {
         ...state,
         assignedBooks: newAssignedBooks,

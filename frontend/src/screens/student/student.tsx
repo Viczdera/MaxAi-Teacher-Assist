@@ -8,10 +8,12 @@ import { useNewTaskModal } from "../../provider/contexts/newTaskContext";
 import Avatar from "../../components/dataDisplay/avatar";
 import { StudentData } from "../../constants/typess";
 import { fetchStudentById } from "../../requests/fetchStudents";
+import { useTeacherContext } from "../../provider/contexts/teacherContext";
 
 const Student = () => {
   const [student, setStudent] = useState<StudentData>({});
   const { studentId } = useParams();
+  const { state } = useTeacherContext();
   const { openModal } = useNewTaskModal();
   useEffect(() => {
     if (studentId)
@@ -23,12 +25,16 @@ const Student = () => {
     () => [
       { title: "firstname", value: student?.firstname || "" },
       { title: "lastname", value: student?.lastname || "" },
+      { title: "school id", value: student?.schoolId || "" },
       { title: "grade", value: student?.grade || "" },
       { title: "email", value: student?.email || "" },
     ],
     [student]
   );
-  //TODO:ADD LOADING STATES FOR EVERYTING
+  const assigned = useMemo(
+    () => state.assignedBooks.find((mine) => mine.studentId === studentId),
+    [studentId, state]
+  );
   return (
     <div className="parent">
       <div className={`child ${styles.student}`}>
@@ -36,16 +42,19 @@ const Student = () => {
         <p className={textStyles.sectionTitle}>Student Profile</p>
         <div className={`card-cont ${styles.overview}`}>
           <div className={styles.avatarName}>
-            <Avatar />
+            <Avatar src={student?.avatar || ""} />
             <div className={styles.name}>
               <p
                 className={textStyles.cardMd}
               >{`${student?.firstname} ${student?.lastname}`}</p>
-              <p>{student?.schoolId}</p>
+              <p>Assigned: {assigned?.resourceName || "None"}</p>
               <div>
-                <button className="button-default" onClick={()=>{
-                  openModal("one",studentId)
-                }}>
+                <button
+                  className="button-default"
+                  onClick={() => {
+                    openModal("one", studentId);
+                  }}
+                >
                   Assign book
                 </button>
               </div>

@@ -2,11 +2,15 @@
   display: inline-block;
   place-content: center;
   padding: var(--p-sm);
-  outline: 1px solid red;
   width: 80px;
   height: 80px;
   overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 50%;
+  img{
+    width: 100%;
+    height: auto;
+  }
 }
 .toast {
   position: fixed;

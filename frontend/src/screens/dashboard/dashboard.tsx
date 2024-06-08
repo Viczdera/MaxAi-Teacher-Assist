@@ -1,25 +1,13 @@
-import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import textStyles from "../../components/texts.module.scss";
 import styles from "./dashboard.module.scss";
-import { useNewTaskModal } from "../../provider/contexts/newTaskContext";
-import StudentTable from "../../components/tables/tables";
 import ClassIcon from "../../assets/icons/class";
-const fetchStudents = async () => {
-  const response = await axios
-    .get("http://localhost:3000/students")
-    .then(({ data }) => {
-      return data;
-    })
-    .catch((err) => {
-      console.log("errror fetching students", err);
-    });
-  return response;
-};
-//TODO: ADD ERROR MESSAGE AND TOAST
+import { useNavigate } from "react-router-dom";
+import { fetchStudents } from "../../requests/fetchStudents";
+
 const Dashboard = () => {
   const [students, setStudents] = useState<any[]>([]);
-  const { openModal } = useNewTaskModal();
+  const navigate = useNavigate();
   useEffect(() => {
     fetchStudents().then((data) => {
       setStudents(data?.students || []);
@@ -33,12 +21,14 @@ const Dashboard = () => {
     ],
     [students]
   );
-
+const goToClass=()=>{
+  navigate("/classroom");
+}
   return (
     <div className="parent">
       <div className={`child ${styles.classroom}`}>
         <p className={`${textStyles.sectionTitle} ${textStyles.sectionTop} `}>
-          Your Classroom
+         Dashboard
         </p>
         <div className={`card-cont ${styles.overview}`}>
           <div className={`${styles.stats}`}>
@@ -57,16 +47,12 @@ const Dashboard = () => {
             <div>
               <p>Assign homework to your students</p>
               <div>
-                <button onClick={openModal} className="button-default">
-                  Assign homework
+                <button onClick={goToClass} className="button-default">
+                  Go to classroom
                 </button>
               </div>
             </div>
           </div>
-        </div>
-        <div className="card-cont">
-          <p className={textStyles.sectionTitle}>All Students</p>
-          <StudentTable data={students} />
         </div>
       </div>
     </div>

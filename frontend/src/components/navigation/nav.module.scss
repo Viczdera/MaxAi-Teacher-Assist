@@ -9,7 +9,7 @@
   justify-content: space-between;
   align-items: center;
   gap: var(--p-md);
-  button{
+  .assignBtn{
     display: none;
   }
   .navList {
@@ -50,7 +50,7 @@
 //sm
 @media (min-width: 640px) {
   .navCont {
-    button{
+    .assignBtn{
       display: flex;
     }
   }

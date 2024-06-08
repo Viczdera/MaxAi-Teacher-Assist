@@ -246,7 +246,7 @@ const TaskForm = ({
           style={{ marginTop: "var(--p-sm)" }}
           type="submit"
         >
-          Confirm
+          Assign
         </button>
       </form>
     </Dialog>

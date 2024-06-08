@@ -10,7 +10,7 @@ import { fetchStudents } from "../../requests/fetchStudents";
 const Classroom = () => {
   const [students, setStudents] = useState<any[]>([]);
   const { openModal } = useNewTaskModal();
-  const { state, dispatch } = useTeacherContext();
+  const { state } = useTeacherContext();
 
   useEffect(() => {
     fetchStudents().then((data) => {

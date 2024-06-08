@@ -28,7 +28,6 @@ const TaskForm = ({
   const [resources, setResources] = useState<any[]>([]);
   const [students, setStudents] = useState<any[]>([]);
   const [loadingResources, setLoadingResources] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
   const { showToast } = useToast();
   const { dispatch } = useTeacherContext();
   const navigate = useNavigate();
@@ -77,8 +76,7 @@ const TaskForm = ({
       const date = new Date(formValues.date);
       const dateTime = date.getTime().toString();
       formValues.date = dateTime;
-      setSubmitting(true);
-      saveTask(values).then(({ success, message, data }) => {
+      saveTask(values).then(({ success, message}) => {
         if (success) {
           if (selectType == "all") {
             dispatch({ type: "SET_ASSIGNMENT", payload: formValues });

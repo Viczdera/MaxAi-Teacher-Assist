@@ -21,22 +21,19 @@ const NavDashboard = () => {
   const changePage = (route: string) => navigate(route);
 
   const handleOpen = () => {
-    if (path !== "/classroom") {
-      navigate("/classroom");
-    } else {
-      openModal();
-    }
+    navigate("/classroom");
+    // if (path !== "/classroom") {
+    //   navigate("/classroom");
+    // } else {
+    //   openModal();
+    // }
   };
 
   return (
     <>
       <div className={`parent ${styles.navParent}`}>
         <div className={`child ${styles.navCont}`}>
-          {/* <UserAvatarWithName /> */}
-          <div
-            // display={{ xs: "none", lg: "flex" }}
-            className={styles.navList}
-          >
+          <div className={styles.navList}>
             {navRoutes.map((route, i) => (
               <button key={i} onClick={() => changePage(route.route)}>
                 <div
@@ -61,7 +58,10 @@ const NavDashboard = () => {
             ))}
           </div>
           <div>
-            <button onClick={handleOpen} className="button-default">
+            <button
+              onClick={handleOpen}
+              className={`button-default ${styles.assignBtn}`}
+            >
               <PlusIcon />
               Assign homework
             </button>

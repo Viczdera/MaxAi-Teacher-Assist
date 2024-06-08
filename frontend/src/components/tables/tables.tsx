@@ -1,7 +1,6 @@
-import React from "react";
 import "./tables.scss";
 import { useNavigate } from "react-router-dom";
-import { StudentData } from "../../screens/student/student";
+import { StudentData } from "../../constants/typess";
 
 
 const StudentTable = ({ data }: { data: any[] }) => {

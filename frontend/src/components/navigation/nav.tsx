@@ -1,14 +1,12 @@
 import styles from "./nav.module.scss";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useNewTaskModal } from "../../provider/contexts/newTaskContext";
 import PlusIcon from "../../assets/icons/plus";
 
 const NavDashboard = () => {
   const location = useLocation();
   const path = "/" + location.pathname.split("/")[1];
   const navigate = useNavigate();
-  const { openModal } = useNewTaskModal();
   const navRoutes: {
     name: string;
     route: string;

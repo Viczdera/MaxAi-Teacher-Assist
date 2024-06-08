@@ -1,7 +1,7 @@
 import styles from "./nav.module.scss";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useNewTaskModal } from "../dialogs/task/newTaskProvider";
+import { useNewTaskModal } from "../../provider/contexts/newTaskContext";
 import PlusIcon from "../../assets/icons/plus";
 
 const NavDashboard = () => {

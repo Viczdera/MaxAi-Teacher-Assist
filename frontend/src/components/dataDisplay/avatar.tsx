@@ -1,4 +1,4 @@
-import styles from "./datadisplay.module.scss"
+import styles from "./styles.module.scss"
 const Avatar = () => {
     return ( 
         <div className={styles.avatar}>

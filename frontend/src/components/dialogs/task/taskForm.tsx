@@ -2,62 +2,48 @@ import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import Dialog from "../dialog";
-import axios from "axios";
 import { SyncLoader } from "react-spinners";
-
 import textStyles from "../../texts.module.scss";
 import "./form.scss";
-
 import Divider from "../../inputs/divider";
+import { NewTask, TaskFormType } from "../../../constants/typess";
+import { useToast } from "../../../provider/contexts/toastContext";
+import { fetchResources } from "../../../requests/fetchResources";
+import { fetchStudents } from "../../../requests/fetchStudents";
+import { saveTask } from "../../../requests/saveTask";
+import { useTeacherContext } from "../../../provider/contexts/teacherContext";
+import { useNavigate } from "react-router-dom";
 
-const fetchResources = async () => {
-  const response = await axios
-    .get("http://localhost:3000/resources")
-    .then(({ data }) => {
-      return data;
-    })
-    .catch((err) => {
-      console.log("errror fetching resources", err);
-    });
-  return response;
-};
-
-const assignHomework = async (data: any) => {
-  const response = await axios
-    .post("http://localhost:3000/assignment", data)
-    .then(({ data }) => {
-      return data;
-    })
-    .catch((err) => {
-      console.log("errror fetching resources", err);
-    });
-  return response;
-};
 const TaskForm = ({
   isOpen,
   onClose,
+  selectType = "all",
+  studentId,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  selectType: TaskFormType;
+  studentId?: string | null;
 }) => {
   const [resources, setResources] = useState<any[]>([]);
+  const [students, setStudents] = useState<any[]>([]);
   const [loadingResources, setLoadingResources] = useState(false);
-
   const [submitting, setSubmitting] = useState(false);
-
+  const { showToast } = useToast();
+  const { dispatch } = useTeacherContext();
+  const navigate = useNavigate();
   useEffect(() => {
+    formik.resetForm();
     setLoadingResources(true);
     fetchResources().then((data) => {
       setResources(data?.resources || []);
       setLoadingResources(false);
     });
-  }, []);
-  const initialValues: {
-    name: string;
-    date: string;
-    resources: any[];
-    students: any[];
-  } = {
+    fetchStudents().then((data) => {
+      setStudents(data?.students || []);
+    });
+  }, [isOpen]);
+  const initialValues: NewTask = {
     name: "",
     date: "",
     resources: [],
@@ -72,14 +58,14 @@ const TaskForm = ({
       .min(new Date(), "Date cannot be in the past"),
     resources: yup
       .array()
-      .of(yup.number())
+      .of(yup.string())
       .min(1, "Add at least 1 resource")
       .required("Add at least 1 resource"),
-    // students: yup
-    //   .array()
-    //   .of(yup.string())
-    //   .min(1, "Add at least 1 student")
-    //   .required("Add at least 1 student"),
+    students: yup
+      .array()
+      .of(yup.string())
+      .min(1, "Add at least 1 student")
+      .required("Add at least 1 student"),
   });
 
   const formik = useFormik({
@@ -89,17 +75,40 @@ const TaskForm = ({
     onSubmit: (values) => {
       let formValues = { ...values };
       const date = new Date(formValues.date);
-      // const dateTime = Math.floor(date.getTime() / 1000).toString();
       const dateTime = date.getTime().toString();
       formValues.date = dateTime;
-      console.log(formValues);
-      // setSubmitting(true);
-      // assignHomework(values).then((data) => {
-      //   console.log(data);
-      //   setSubmitting(false);
-      // });
+      setSubmitting(true);
+      saveTask(values).then(({ success, message, data }) => {
+        if (success) {
+          if (selectType == "all") {
+            dispatch({ type: "SET_ASSIGNMENT", payload: formValues });
+          } else {
+            let payload = {
+              studentId: formValues.students[0],
+              resourceId: formValues.resources[0],
+              resourceName: formValues.name,
+            };
+            dispatch({ type: "SET_ASSIGNED_BOOKS", payload: payload });
+          }
+          onClose();
+          showToast(message, "success");
+          selectType == "all" && navigate("/classroom");
+        } else {
+          onClose();
+          showToast(message, "error");
+        }
+      });
     },
   });
+  useEffect(() => {
+    if (selectType == "all") {
+      const studentVals: any[] = students?.map((student) => student?.id);
+      formik.setFieldValue("students", studentVals);
+    } else if (selectType == "one" && studentId) {
+      const newArr = [studentId];
+      formik.setFieldValue("students", newArr);
+    }
+  }, [students]);
   return (
     <Dialog isOpen={isOpen} onClose={onClose}>
       <form onSubmit={formik.handleSubmit}>
@@ -163,36 +172,43 @@ const TaskForm = ({
                       ? "error"
                       : ""
                   }
-                  value={formik.values.resources}
+                  value={
+                    selectType == "all"
+                      ? formik.values.resources
+                      : formik.values.resources[0]
+                  }
                   onChange={(e) => {
                     const selectedValue: string = e.target.value;
                     const selectedValues = Array.from(
                       e.target.selectedOptions,
                       (option) => option.value
                     );
-
-                    const currentValue = [...formik.values.resources];
-                    if (selectedValues.length == 1) {
-                      let selectedIndex = currentValue.indexOf(
-                        selectedValues[0]
-                      );
-                      if (currentValue.includes(selectedValue)) {
-                        currentValue.splice(selectedIndex, 1);
-                        formik.setFieldValue(e.target.name, currentValue);
+                    if (selectType === "all") {
+                      const currentValue = [...formik.values.resources];
+                      if (selectedValues.length == 1) {
+                        let selectedIndex = currentValue.indexOf(
+                          selectedValues[0]
+                        );
+                        if (currentValue.includes(selectedValue)) {
+                          currentValue.splice(selectedIndex, 1);
+                          formik.setFieldValue(e.target.name, currentValue);
+                        } else {
+                          formik.setFieldValue(e.target.name, [
+                            ...currentValue,
+                            selectedValue,
+                          ]);
+                        }
+                      } else if (selectedValues.length > 1) {
+                        formik.setFieldValue(e.target.name, selectedValues);
                       } else {
-                        formik.setFieldValue(e.target.name, [
-                          ...currentValue,
-                          selectedValue,
-                        ]);
+                        formik.setFieldValue(e.target.name, []);
                       }
-                    } else if (selectedValues.length > 1) {
-                      formik.setFieldValue(e.target.name, selectedValues);
                     } else {
-                      formik.setFieldValue(e.target.name, []);
+                      formik.setFieldValue(e.target.name, selectedValues);
                     }
                   }}
                   onBlur={formik.handleBlur}
-                  multiple
+                  multiple={selectType === "all"}
                 >
                   {resources.map((resource, index) => (
                     <option key={index} value={resource?.id}>
@@ -211,33 +227,19 @@ const TaskForm = ({
             )}
           </div>
 
-          {/* <div className="form-group">
-          <label>students</label>
-          <select
-            name="students"
-            className={
-              formik.touched.students && formik.errors.students ? "error" : ""
-            }
-            value={formik.values.students}
-            onChange={(e) => {
-              const value = Array.from(
-                e.target.selectedOptions,
-                (option) => option.value
-              );
-              console.log(value);
-              formik.setFieldValue("students", value);
-            }}
-            onBlur={formik.handleBlur}
-            multiple={false}
-          >
-            {students.map((resource, index) => (
-              <option>{resource?.path}</option>
-            ))}
-          </select>
-          {formik.touched.students && formik.errors.students ? (
-            <div className="error-message">{formik.errors.students}</div>
-          ) : null}
-        </div> */}
+          <div className="form-group">
+            <label>Student(s)</label>
+            <div className="flex-center-center inputWrap">
+              {students.length > 0
+                ? selectType === "all"
+                  ? "All students selected"
+                  : "One student selected"
+                : "Could not get students.Kindly refresh"}
+            </div>
+            {formik.touched.students && formik.errors.students ? (
+              <div className="error-message">{formik.errors.students}</div>
+            ) : null}
+          </div>
         </div>
         <button
           className="button-default"

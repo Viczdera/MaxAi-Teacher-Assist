@@ -1,38 +1,13 @@
-import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import textStyles from "../../components/texts.module.scss";
 import styles from "./student.module.scss";
 import Back from "../../components/navigation/back";
 import { useParams } from "react-router-dom";
 import Divider from "../../components/inputs/divider";
-import { useNewTaskModal } from "../../components/dialogs/task/newTaskProvider";
+import { useNewTaskModal } from "../../provider/contexts/newTaskContext";
 import Avatar from "../../components/dataDisplay/avatar";
-
-export interface StudentData {
-  id?: string;
-  grade?: string;
-  firstname?: string;
-  lastname?: string;
-  email?: string;
-  schoolId?: string;
-  avatar?: string;
-}
-const fetchStudentById = async (id: string) => {
-  const response = await axios
-    .get("http://localhost:3000/students")
-    .then(({ data }) => {
-      if (data?.students) {
-        const student = data?.students.find(
-          (student: any) => student?.id === id
-        );
-        return student;
-      } else return {};
-    })
-    .catch((err) => {
-      console.log("errror fetching student", err);
-    });
-  return response;
-};
+import { StudentData } from "../../constants/typess";
+import { fetchStudentById } from "../../requests/fetchStudents";
 
 const Student = () => {
   const [student, setStudent] = useState<StudentData>({});
@@ -63,10 +38,14 @@ const Student = () => {
           <div className={styles.avatarName}>
             <Avatar />
             <div className={styles.name}>
-              <p className={textStyles.cardMd}>{`${student?.firstname} ${student?.lastname}`}</p>
+              <p
+                className={textStyles.cardMd}
+              >{`${student?.firstname} ${student?.lastname}`}</p>
               <p>{student?.schoolId}</p>
               <div>
-                <button className="button-default" onClick={openModal}>
+                <button className="button-default" onClick={()=>{
+                  openModal("one",studentId)
+                }}>
                   Assign book
                 </button>
               </div>
